@@ -36,4 +36,12 @@ export class PostService {
   findOne(postId: number): CreatePostDto | undefined {
     return this.posts.find((post: CreatePostDto): boolean => post.id == postId);
   }
+
+  modifyPost(postId: number, postData: CreatePostDto): CreatePostDto {
+    const postIndex = this.posts.findIndex((post) => post.id == postId);
+    console.log(postIndex);
+    this.posts[postIndex].title = postData.title;
+    this.posts[postIndex].content = postData.content;
+    return this.posts[postIndex];
+  }
 }
