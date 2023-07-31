@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -35,5 +36,11 @@ export class PostsController {
   @HttpCode(200)
   modifyPost(@Param('postId') postId: number, @Body() postBody: CreatePostDto) {
     return this.postService.modifyPost(postId, postBody);
+  }
+
+  @Delete(':postId')
+  @HttpCode(204)
+  deletePost(@Param('postId') postId: number) {
+    this.postService.delete(postId);
   }
 }

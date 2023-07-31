@@ -22,8 +22,6 @@ export class PostService {
     },
   ];
 
-  constructor() {}
-
   create(postData: CreatePostDto): object {
     this.post = postData;
     return this.post;
@@ -43,5 +41,10 @@ export class PostService {
     this.posts[postIndex].title = postData.title;
     this.posts[postIndex].content = postData.content;
     return this.posts[postIndex];
+  }
+
+  delete(postId: number): void {
+    const postIndex = this.posts.findIndex((post) => post.id == postId);
+    delete this.posts[postIndex];
   }
 }
