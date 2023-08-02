@@ -28,8 +28,8 @@ export class PostsController {
   }
 
   @Get(':postId')
-  getPostOne(@Param('postId') postId: number) {
-    return this.postService.findOne(postId);
+  getPostOne(@Param('postId') postId: string) {
+    return this.postService.findOne(+postId);
   }
 
   @Patch(':postId')

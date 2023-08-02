@@ -22,7 +22,7 @@ export class PostService {
     },
   ];
 
-  create(postData: CreatePostDto): object {
+  create(postData: CreatePostDto): CreatePostDto {
     this.post = postData;
     return this.post;
   }
@@ -32,7 +32,9 @@ export class PostService {
   }
 
   findOne(postId: number): CreatePostDto | undefined {
-    return this.posts.find((post: CreatePostDto): boolean => post.id == postId);
+    return this.posts.find(
+      (post: CreatePostDto): boolean => post.id === postId
+    );
   }
 
   modifyPost(postId: number, postData: CreatePostDto): CreatePostDto {

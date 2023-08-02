@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { IndexModule } from './modules/index.module';
+import { AppModule } from './app.module';
 
 async function startServer() {
-  const app = await NestFactory.create(IndexModule);
+  const app = await NestFactory.create(AppModule);
   await app.listen(3000);
 }
 
