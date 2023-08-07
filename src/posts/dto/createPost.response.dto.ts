@@ -5,9 +5,9 @@ export class CreatePostResponseDto implements IPost {
   title: string;
   content: string;
 
-  constructor(IPost: IPost) {
-    this.id = IPost.id;
-    this.title = IPost.title;
-    this.content = IPost.content;
+  constructor(savedPost: IPost) {
+    this.id = savedPost.id;
+    this.title = savedPost.title;
+    this.content = savedPost.content;
   }
 }
