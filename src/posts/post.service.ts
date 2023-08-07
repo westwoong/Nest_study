@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { SearchPostResponseDto } from './dto/searchPost.response.dto';
+import { parse } from 'ts-jest';
 
 @Injectable()
 export class PostService {
@@ -56,5 +57,15 @@ export class PostService {
     return await this.postRepository.findOne({
       where: { id: parsingPostId },
     });
+  }
+
+  async delete(postId: string) {
+    const parsingPostId = parseInt(postId);
+    await this.postRepository
+      .createQueryBuilder('posts')
+      .delete()
+      .from(Post)
+      .where('id = :id', { id: parsingPostId })
+      .execute();
   }
 }
