@@ -22,9 +22,6 @@ export class PostService {
   }
 
   async searchAll() {
-    const searchedData = await this.postRepository.find({});
-    console.log(searchedData);
-    return searchedData;
-    // return new CreatePostResponseDto();
+    return await this.postRepository.find({});
   }
 }
