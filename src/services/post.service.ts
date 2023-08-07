@@ -13,7 +13,9 @@ export class PostService {
 
   async create(createPostRequestDto: CreatePostRequestDto) {
     const { title, content } = createPostRequestDto;
-    const post = new Post(title, content);
+    const post = new Post();
+    post.title = title;
+    post.content = content;
     await this.postRepository.save(post);
   }
 }
