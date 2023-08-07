@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './Post.entity';
 import { Repository } from 'typeorm';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
+import { SearchPostResponseDto } from './dto/searchPost.response.dto';
 
 @Injectable()
 export class PostService {
@@ -23,5 +24,18 @@ export class PostService {
 
   async searchAll() {
     return await this.postRepository.find({});
+  }
+
+  async search(postId: string) {
+    const parsingPostId = parseInt(postId);
+    const searchedPost: Post | null = await this.postRepository.findOne({
+      where: {
+        id: parsingPostId,
+      },
+    });
+    if (!searchedPost) {
+      throw new NotFoundException('해당 게시물 없음');
+    }
+    return new SearchPostResponseDto(searchedPost);
   }
 }

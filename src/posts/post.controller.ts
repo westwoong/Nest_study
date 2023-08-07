@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 
@@ -16,5 +16,11 @@ export class PostsController {
   @HttpCode(200)
   searchAll() {
     return this.postService.searchAll();
+  }
+
+  @Get(':postId')
+  @HttpCode(200)
+  searchByPostId(@Param('postId') postId: string) {
+    return this.postService.search(postId);
   }
 }
