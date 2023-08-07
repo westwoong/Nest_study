@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 
@@ -14,13 +23,20 @@ export class PostsController {
 
   @Get()
   @HttpCode(200)
-  searchAll() {
-    return this.postService.searchAll();
+  searchAll(@Query('postId') postId: string) {
+    if (postId) {
+      return this.postService.search(postId);
+    } else {
+      return this.postService.searchAll();
+    }
   }
 
-  @Get(':postId')
+  @Patch(':postId')
   @HttpCode(200)
-  searchByPostId(@Param('postId') postId: string) {
-    return this.postService.search(postId);
+  modifyByPostId(
+    @Param('postId') postId: string,
+    @Body() modifyPostRequestDto: CreatePostRequestDto,
+  ) {
+    return this.postService.modifyByPostId(postId, modifyPostRequestDto);
   }
 }

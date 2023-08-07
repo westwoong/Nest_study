@@ -38,4 +38,19 @@ export class PostService {
     }
     return new SearchPostResponseDto(searchedPost);
   }
+
+  async modifyByPostId(
+    postId: string,
+    modifyPostRequestDto: CreatePostRequestDto,
+  ) {
+    const { title, content } = modifyPostRequestDto;
+    const parsingPostId = parseInt(postId);
+
+    const modifyPostData = {
+      title: title,
+      content: content,
+    };
+
+    return await this.postRepository.update(parsingPostId, modifyPostData);
+  }
 }
