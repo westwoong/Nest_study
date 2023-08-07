@@ -51,6 +51,10 @@ export class PostService {
       content: content,
     };
 
-    return await this.postRepository.update(parsingPostId, modifyPostData);
+    await this.postRepository.update(parsingPostId, modifyPostData);
+
+    return await this.postRepository.findOne({
+      where: { id: parsingPostId },
+    });
   }
 }
