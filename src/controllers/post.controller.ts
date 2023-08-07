@@ -1,15 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { PostService } from '../services/post.service';
-import { CreatePostDto } from '../dto/createPost.dto';
+import { CreatePostRequestDto } from '../dto/createPost.request.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -17,30 +8,7 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() postBody: CreatePostDto): object {
-    return this.postService.create(postBody);
-  }
-
-  @Get()
-  @HttpCode(200)
-  getPosts() {
-    return this.postService.searchAll();
-  }
-
-  @Get(':postId')
-  getPostOne(@Param('postId') postId: string) {
-    return this.postService.findOne(+postId);
-  }
-
-  @Patch(':postId')
-  @HttpCode(200)
-  modifyPost(@Param('postId') postId: number, @Body() postBody: CreatePostDto) {
-    return this.postService.modifyPost(postId, postBody);
-  }
-
-  @Delete(':postId')
-  @HttpCode(204)
-  deletePost(@Param('postId') postId: number) {
-    this.postService.delete(postId);
+  create(@Body() createPostRequestDto: CreatePostRequestDto) {
+    return this.postService.create(createPostRequestDto);
   }
 }

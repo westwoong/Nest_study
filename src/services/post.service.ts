@@ -1,52 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from '../dto/createPost.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from '../model/Post.entity';
+import { Repository } from 'typeorm';
+import { CreatePostRequestDto } from '../dto/createPost.request.dto';
 
 @Injectable()
 export class PostService {
-  post: CreatePostDto;
-  posts: CreatePostDto[] = [
-    {
-      id: 1,
-      title: '제목',
-      content: '내용',
-    },
-    {
-      id: 2,
-      title: '제목2',
-      content: '내용2',
-    },
-    {
-      id: 3,
-      title: '제목3',
-      content: '내용3',
-    },
-  ];
+  constructor(
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
+  ) {}
 
-  create(postData: CreatePostDto): CreatePostDto {
-    this.post = postData;
-    return this.post;
-  }
-
-  searchAll(): CreatePostDto[] {
-    return this.posts;
-  }
-
-  findOne(postId: number): CreatePostDto | undefined {
-    return this.posts.find(
-      (post: CreatePostDto): boolean => post.id === postId
-    );
-  }
-
-  modifyPost(postId: number, postData: CreatePostDto): CreatePostDto {
-    const postIndex = this.posts.findIndex((post) => post.id == postId);
-    console.log(postIndex);
-    this.posts[postIndex].title = postData.title;
-    this.posts[postIndex].content = postData.content;
-    return this.posts[postIndex];
-  }
-
-  delete(postId: number): void {
-    const postIndex = this.posts.findIndex((post) => post.id == postId);
-    delete this.posts[postIndex];
+  async create(createPostRequestDto: CreatePostRequestDto) {
+    const { title, content } = createPostRequestDto;
+    const post = new Post(title, content);
+    await this.postRepository.save(post);
   }
 }

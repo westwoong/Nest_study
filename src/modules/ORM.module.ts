@@ -11,7 +11,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       username: 'root',
       password: 'woong123',
       database: 'nest',
-      // entities: [],
       autoLoadEntities: true, // 자동으로 엔티티 관계를 인식해라
       synchronize: true,
       logging: true, // sequelize 로깅이랑 동일
