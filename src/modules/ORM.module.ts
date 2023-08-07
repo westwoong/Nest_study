@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { User } from '../model/User.entity';
+import { Post } from '../model/Post.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { User } from '../model/User.entity';
       logging: true, // sequelize 로깅이랑 동일
       namingStrategy: new SnakeNamingStrategy(), // 코드에서 카멜케이스로된 테이블명을 DB에서 스네이크케이스로 변경해주는것
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Post]),
   ],
 })
 export class ORMModule {}

@@ -9,42 +9,42 @@ export class CommentService {
       id: 1,
       title: '제목',
       content: '내용',
-      postId: 1,
+      postId: '1',
     },
     {
       id: 2,
       title: '제목2',
       content: '내용2',
-      postId: 1,
+      postId: '1',
     },
     {
       id: 3,
       title: '제목3',
       content: '내용3',
-      postId: 1,
+      postId: '1',
     },
     {
       id: 4,
       title: '제목',
       content: '내용',
-      postId: 2,
+      postId: '2',
     },
     {
       id: 5,
       title: '제목2',
       content: '내용2',
-      postId: 3,
+      postId: '3',
     },
     {
       id: 6,
       title: '제목3',
       content: '내용3',
-      postId: 4,
+      postId: '4',
     },
   ];
 
   createComment(
-    postId: number,
+    postId: string,
     commentBody: CreateCommentDto,
   ): CreateCommentDto {
     this.comment = commentBody;
@@ -52,15 +52,17 @@ export class CommentService {
     return this.comment;
   }
 
-  searchCommentsByPostId(postId: number): CreateCommentDto[] {
+  searchCommentsByPostId(postId: string): CreateCommentDto[] {
     return this.comments.filter(
-      (comment: CreateCommentDto): boolean => comment.postId == postId,
+      (comment: CreateCommentDto): boolean =>
+        comment.postId.toString() === postId,
     );
   }
 
-  deleteByCommentId(commentId: number): void {
+  deleteByCommentId(commentId: string): void {
     const commentIndex = this.comments.findIndex(
-      (comment: CreateCommentDto): boolean => comment.id == commentId,
+      (comment: CreateCommentDto): boolean =>
+        comment.id.toString() === commentId,
     );
     delete this.comments[commentIndex];
   }

@@ -16,7 +16,7 @@ export class CommentController {
 
   @Post()
   create(
-    @Param('postId') postId: number,
+    @Param('postId') postId: string,
     @Body() commentBody: CreateCommentDto,
   ) {
     return this.commentService.createComment(postId, commentBody);
@@ -24,13 +24,13 @@ export class CommentController {
 
   @Get()
   @HttpCode(200)
-  getComments(@Param('postId') postId: number): CreateCommentDto[] {
+  getComments(@Param('postId') postId: string): CreateCommentDto[] {
     return this.commentService.searchCommentsByPostId(postId);
   }
 
   @Delete(':commentId')
   @HttpCode(204)
-  delete(@Param('commentId') commentId: number) {
+  delete(@Param('commentId') commentId: string) {
     this.commentService.deleteByCommentId(commentId);
   }
 }
