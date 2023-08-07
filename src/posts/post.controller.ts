@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
-import { PostService } from '../services/post.service';
-import { CreatePostRequestDto } from '../dto/createPost.request.dto';
+import { PostService } from './post.service';
+import { CreatePostRequestDto } from './dto/createPost.request.dto';
 
 @Controller('posts')
 export class PostsController {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PostModule } from './modules/post.module';
+import { PostModule } from './posts/post.module';
 import { ORMModule } from './modules/ORM.module';
 
 @Module({
