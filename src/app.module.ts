@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PostModule } from './modules/post.module';
-import { CommentModule } from './modules/comment.module';
 import { ORMModule } from './modules/ORM.module';
 
 @Module({
-  imports: [PostModule, CommentModule, ORMModule],
+  imports: [PostModule, ORMModule],
 })
 export class AppModule {}
