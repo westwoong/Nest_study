@@ -13,7 +13,7 @@ import { PostService } from './post.service';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 
 @Controller('posts')
-export class PostsController {
+export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
@@ -30,6 +30,12 @@ export class PostsController {
     } else {
       return this.postService.searchAll();
     }
+  }
+
+  @Get('search')
+  @HttpCode(200)
+  searchKeyword(@Query('keyword') keyword: string) {
+    return this.postService.searchByKeyword(keyword);
   }
 
   @Patch(':postId')

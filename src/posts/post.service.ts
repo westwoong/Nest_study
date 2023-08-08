@@ -1,11 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './Post.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { SearchPostResponseDto } from './dto/searchPost.response.dto';
-import { parse } from 'ts-jest';
 
 @Injectable()
 export class PostService {
@@ -67,5 +66,15 @@ export class PostService {
       .from(Post)
       .where('id = :id', { id: parsingPostId })
       .execute();
+  }
+
+  async searchByKeyword(keyword: string) {
+    console.log(keyword);
+    return await this.postRepository
+      .createQueryBuilder('posts')
+      .where('posts.title LIKE :keyword OR posts.content LIKE :keyword', {
+        keyword: `%${keyword}%`,
+      })
+      .getMany();
   }
 }
