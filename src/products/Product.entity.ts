@@ -6,13 +6,13 @@ export class Product {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, comment: '상품 명' })
   name: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, comment: '상품 가격' })
   price: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, comment: '상품 설명' })
   description: string;
 
   @ManyToOne(() => User, (user) => user.products, { nullable: false })
