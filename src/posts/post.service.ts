@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './Post.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { SearchPostResponseDto } from './dto/searchPost.response.dto';
