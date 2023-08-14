@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { RegisterProductRequestDto } from './dto/registerProduct.request.dto';
 
@@ -10,5 +17,12 @@ export class ProductController {
   @HttpCode(201)
   register(@Body() registerProductDto: RegisterProductRequestDto) {
     return this.productService.register(registerProductDto);
+  }
+
+  @Delete('/:productId')
+  @HttpCode(204)
+  delete(@Param('productId') productId: string) {
+    const parserProductId = parseInt(productId);
+    return this.productService.deleteProduct(parserProductId);
   }
 }

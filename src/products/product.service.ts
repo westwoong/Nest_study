@@ -33,4 +33,11 @@ export class ProductService {
     const savedProduct = await this.productRepository.save(product);
     return new RegisterProductResponseDto(savedProduct).registeredProduct();
   }
+
+  async deleteProduct(productId: number) {
+    const deleteProduct = await this.productRepository.delete(productId);
+    if (!deleteProduct) {
+      throw new NotFoundException('없는 상품임');
+    }
+  }
 }
