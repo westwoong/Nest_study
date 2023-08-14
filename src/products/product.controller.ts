@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   Post,
@@ -24,5 +25,12 @@ export class ProductController {
   delete(@Param('productId') productId: string) {
     const parserProductId = parseInt(productId);
     return this.productService.deleteProduct(parserProductId);
+  }
+
+  @Get('/:productId')
+  @HttpCode(200)
+  search(@Param('productId') productId: string) {
+    const parserProductId = parseInt(productId);
+    return this.productService.searchBy(parserProductId);
   }
 }

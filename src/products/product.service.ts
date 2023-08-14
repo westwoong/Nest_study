@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { RegisterProductRequestDto } from './dto/registerProduct.request.dto';
 import { RegisterProductResponseDto } from './dto/registerProduct.response.dto';
 import { User } from '../users/User.entity';
+import { SearchProductResponseDto } from './dto/searchProduct.response.dto';
 
 @Injectable()
 export class ProductService {
@@ -39,5 +40,25 @@ export class ProductService {
     if (!deleteProduct) {
       throw new NotFoundException('없는 상품임');
     }
+  }
+
+  async searchBy(productId: number) {
+    const searchedProduct = await this.productRepository
+      .createQueryBuilder('product')
+      .select([
+        'user.name As userName',
+        'user.company_name As companyName ',
+        'product.name As productName',
+        'product.*',
+      ])
+      .innerJoin('product.user', 'user')
+      .where('product.id = :productId', { productId })
+      .getRawOne();
+
+    if (!searchedProduct) {
+      throw new NotFoundException('해당 상품 없음');
+    }
+    console.log(searchedProduct);
+    return new SearchProductResponseDto(searchedProduct);
   }
 }
