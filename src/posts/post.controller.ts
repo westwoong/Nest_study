@@ -22,20 +22,26 @@ export class PostController {
     return this.postService.create(createPostRequestDto);
   }
 
-  @Get()
-  @HttpCode(200)
-  searchAll(@Query('postId') postId: string) {
-    if (postId) {
-      return this.postService.search(postId);
-    } else {
-      return this.postService.searchAll();
-    }
-  }
-
   @Get('search')
   @HttpCode(200)
   searchKeyword(@Query('keyword') keyword: string) {
+    console.log(keyword);
+    console.log('키워드검색');
     return this.postService.searchByKeyword(keyword);
+  }
+
+  @Get(':postId')
+  @HttpCode(200)
+  searchByPostId(@Param('postId') postId: string) {
+    console.log('일부 게시글 검색');
+    return this.postService.search(postId);
+  }
+
+  @Get()
+  @HttpCode(200)
+  searchAll() {
+    console.log('전체 게시글 검색');
+    return this.postService.searchAll();
   }
 
   @Patch(':postId')
