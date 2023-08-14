@@ -17,7 +17,5 @@ export class ProductService {
     const product = new Product(name, price, description);
     const savedProduct = await this.productRepository.save(product);
     return new RegisterProductResponseDto(savedProduct);
-
-    // return await this.productRepository.save(product);
   }
 }
