@@ -9,6 +9,8 @@ import { PostToCategory } from './category/PostToCategory.entity';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
 import { GetPostByCategoryResponseDto } from './dto/getPostByCategory.response.dto';
+import { Comment } from '../comments/Comment.entity';
+import { GetPostByIdResponseDto } from './dto/getPostById.response.dto';
 
 @Injectable()
 export class PostService {
@@ -86,12 +88,28 @@ export class PostService {
     const getPosts = await this.postRepository.find({
       where: { id: postId },
       relations: {
+        comments: true,
         postToCategories: {
           category: true,
         },
       },
     });
-    console.log(getPosts);
-    return getPosts;
+
+    const commentsData = getPosts[0].comments.map((comment) => ({
+      id: comment.id,
+      content: comment.content,
+      createdAt: comment.createdAt,
+    }));
+
+    const responseData = {
+      category: getPosts[0].postToCategories[0].category.name,
+      postId: getPosts[0].id,
+      title: getPosts[0].title,
+      content: getPosts[0].content,
+      createdAt: getPosts[0].createdAt,
+      comments: commentsData,
+    };
+
+    return new GetPostByIdResponseDto(responseData);
   }
 }
