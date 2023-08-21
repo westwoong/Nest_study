@@ -55,7 +55,7 @@ export class PostService {
   }
 
   async getPostsByCategory(categoryId: number) {
-    const test = await this.categoryRepository.find({
+    const postByCategory = await this.categoryRepository.find({
       where: { id: categoryId },
       relations: {
         postToCategories: {
@@ -64,7 +64,7 @@ export class PostService {
       },
     });
 
-    const postList = test[0].postToCategories.map((list) => list.post);
+    const postList = postByCategory[0].postToCategories.map((list) => list.post);
 
     postList.sort(
       (a, b) =>
@@ -72,11 +72,15 @@ export class PostService {
     );
 
     const response = {
-      category: test[0].name,
+      category: postByCategory[0].name,
       postList: postList,
     };
 
     // console.log(response);
     return new GetPostByCategoryResponseDto(response);
+  }
+
+  async getPostById(postId: number) {
+    return postId;
   }
 }

@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { PostService } from './post.service';
+import * as http from 'http';
 
 @Controller('posts')
 export class PostController {
@@ -23,5 +24,12 @@ export class PostController {
   getPostByCategory(@Param('categoryId') categoryId: string) {
     const parsedCategoryId = parseInt(categoryId);
     return this.postService.getPostsByCategory(parsedCategoryId);
+  }
+
+  @Get('/:postId')
+  @HttpCode(200)
+  getPostById(@Param('postId') postId: string) {
+    const parsedPostId = parseInt(postId);
+    return this.postService.getPostById(parsedPostId);
   }
 }
