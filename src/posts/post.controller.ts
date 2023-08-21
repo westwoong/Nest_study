@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { PostService } from './post.service';
 import * as http from 'http';
@@ -31,5 +39,15 @@ export class PostController {
   getPostById(@Param('postId') postId: string) {
     const parsedPostId = parseInt(postId);
     return this.postService.getPostById(parsedPostId);
+  }
+
+  @Patch('/:postId')
+  @HttpCode(200)
+  modify(
+    @Param('postId') postId: string,
+    @Body() modifyPostDto: CreatePostRequestDto,
+  ) {
+    const parsedPostId = parseInt(postId);
+    return this.postService.modify(parsedPostId, modifyPostDto);
   }
 }

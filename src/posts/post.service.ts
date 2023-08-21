@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { Repository } from 'typeorm';
 import { Post } from './Post.entity';
@@ -9,8 +13,8 @@ import { PostToCategory } from './category/PostToCategory.entity';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
 import { GetPostByCategoryResponseDto } from './dto/getPostByCategory.response.dto';
-import { Comment } from '../comments/Comment.entity';
 import { GetPostByIdResponseDto } from './dto/getPostById.response.dto';
+import { ModifyPostResponseDto } from './dto/modifyPost.response.dto';
 
 @Injectable()
 export class PostService {
@@ -45,6 +49,23 @@ export class PostService {
     }
 
     return new CreatePostResponseDto(savedPost);
+  }
+
+  @Transactional()
+  async modify(postId: number, postData: CreatePostRequestDto) {
+    const getPost = await this.postRepository.findOne({
+      where: { id: postId },
+    });
+    if (!getPost) {
+      throw new NotFoundException('해당 게시물 없음');
+    }
+
+    getPost.title = postData.title;
+    getPost.content = postData.content;
+
+    const savedPost = await this.postRepository.save(getPost);
+
+    return new ModifyPostResponseDto(savedPost);
   }
 
   async getAllPosts() {
