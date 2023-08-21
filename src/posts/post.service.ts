@@ -7,6 +7,7 @@ import { Category } from './category/Category.entity';
 import { Transactional } from 'typeorm-transactional';
 import { PostToCategory } from './category/PostToCategory.entity';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
+import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
 
 @Injectable()
 export class PostService {
@@ -43,8 +44,13 @@ export class PostService {
     return new CreatePostResponseDto(savedPost);
   }
 
-  getAllPosts() {
-    return 'all Posts';
+  async getAllPosts() {
+    const getAllPosts = await this.postRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+    return getAllPosts.map((post) => new GetAllPostResponseDto(post));
   }
 
   getPostsByCategory(categoryId: string) {

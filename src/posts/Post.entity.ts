@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { DefaultEntityColumn } from '../config/default.entity';
 import { Comment } from '../comments/Comment.entity';
 import { PostToCategory } from './category/PostToCategory.entity';
-import { CreatePostRequestDto } from './dto/createPost.request.dto';
+import { PostConstructorType } from '../types/post.constructor.type';
 
 @Entity('posts')
 export class Post extends DefaultEntityColumn {
@@ -18,7 +18,7 @@ export class Post extends DefaultEntityColumn {
   @OneToMany(() => PostToCategory, (postToCategory) => postToCategory.post)
   postToCategories: PostToCategory[];
 
-  constructor(createPostData: CreatePostRequestDto) {
+  constructor(createPostData: PostConstructorType) {
     super();
     if (createPostData) {
       this.title = createPostData.title;
