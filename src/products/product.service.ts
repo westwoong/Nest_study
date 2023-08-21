@@ -36,9 +36,10 @@ export class ProductService {
   }
 
   async deleteProduct(productId: number) {
-    const deleteProduct = await this.productRepository.delete(productId);
-    if (!deleteProduct) {
-      throw new NotFoundException('없는 상품임');
+    const deleteResult = await this.productRepository.delete(productId);
+    // affected = 영향을 받는 행이 몇개인지 출력해줌 typeorm delete.affected
+    if (deleteResult.affected !== 0) {
+      throw new NotFoundException('delete error');
     }
   }
 
