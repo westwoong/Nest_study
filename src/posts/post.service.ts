@@ -42,4 +42,12 @@ export class PostService {
 
     return new CreatePostResponseDto(savedPost);
   }
+
+  getAllPosts() {
+    return 'all Posts';
+  }
+
+  getPostsByCategory(categoryId: string) {
+    return categoryId;
+  }
 }

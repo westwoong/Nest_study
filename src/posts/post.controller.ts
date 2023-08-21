@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { PostService } from './post.service';
 
@@ -10,5 +10,17 @@ export class PostController {
   @HttpCode(201)
   create(@Body() createPostDto: CreatePostRequestDto) {
     return this.postService.create(createPostDto);
+  }
+
+  @Get()
+  @HttpCode(200)
+  getAllPosts() {
+    return this.postService.getAllPosts();
+  }
+
+  @Get('/category/:categoryId')
+  @HttpCode(200)
+  getPostByCategory(@Param('categoryId') categoryId: string) {
+    return this.postService.getPostsByCategory(categoryId);
   }
 }
