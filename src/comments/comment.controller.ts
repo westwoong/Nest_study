@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Param, Post } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentRequestDto } from './dto/createComment.request.dto';
 
@@ -14,5 +14,12 @@ export class CommentController {
   ) {
     const parsedPostId = parseInt(postId);
     return this.commentService.create(parsedPostId, createCommentDto);
+  }
+
+  @Delete('/comments/:commentId')
+  @HttpCode(204)
+  delete(@Param('commentId') commentId: string){
+    const parsedCommentId = parseInt(commentId);
+    return this.commentService.delete(parsedCommentId);
   }
 }

@@ -37,4 +37,12 @@ export class CommentService {
 
     return new CreateCommentResponseDto(responseData);
   }
+
+  @Transactional()
+  async delete(commentId: number) {
+    const deleteComment = await this.commentRepository.delete(commentId);
+    if (deleteComment.affected === 0) {
+      throw new NotFoundException('해당 댓글 없어여');
+    }
+  }
 }
