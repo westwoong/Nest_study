@@ -64,7 +64,9 @@ export class PostService {
       },
     });
 
-    const postList = postByCategory[0].postToCategories.map((list) => list.post);
+    const postList = postByCategory[0].postToCategories.map(
+      (list) => list.post,
+    );
 
     postList.sort(
       (a, b) =>
@@ -81,6 +83,15 @@ export class PostService {
   }
 
   async getPostById(postId: number) {
-    return postId;
+    const getPosts = await this.postRepository.find({
+      where: { id: postId },
+      relations: {
+        postToCategories: {
+          category: true,
+        },
+      },
+    });
+    console.log(getPosts);
+    return getPosts;
   }
 }
