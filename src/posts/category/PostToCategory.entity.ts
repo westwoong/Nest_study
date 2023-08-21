@@ -2,7 +2,7 @@ import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from '../Post.entity';
 import { Category } from './Category.entity';
 
-@Entity()
+@Entity('post_category')
 export class PostToCategory {
   @PrimaryGeneratedColumn()
   id: number;

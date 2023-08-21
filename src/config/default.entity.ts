@@ -9,12 +9,15 @@ export class DefaultEntityColumn {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
-  createdDate: Date;
+  @CreateDateColumn({
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
+  })
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedDate: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedDate: Date;
+  deletedAt: Date;
 }
