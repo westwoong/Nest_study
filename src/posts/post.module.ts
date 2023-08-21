@@ -5,9 +5,12 @@ import { PostController } from './post.controller';
 import { PostService } from './post.service';
 import { Category } from './category/Category.entity';
 import { PostToCategory } from './category/PostToCategory.entity';
+import { Comment } from '../comments/Comment.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, Category, PostToCategory])],
+  imports: [
+    TypeOrmModule.forFeature([Post, Category, PostToCategory, Comment]),
+  ],
   controllers: [PostController],
   providers: [PostService],
 })

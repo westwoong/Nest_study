@@ -12,10 +12,12 @@ export class Post extends DefaultEntityColumn {
   @Column({ nullable: false })
   content: string;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
   comments: Comment[];
 
-  @OneToMany(() => PostToCategory, (postToCategory) => postToCategory.post)
+  @OneToMany(() => PostToCategory, (postToCategory) => postToCategory.post, {
+    onDelete: 'CASCADE',
+  })
   postToCategories: PostToCategory[];
 
   constructor(createPostData: PostConstructorType) {

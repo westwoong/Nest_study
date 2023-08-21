@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -9,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { CreatePostRequestDto } from './dto/createPost.request.dto';
 import { PostService } from './post.service';
-import * as http from 'http';
 
 @Controller('posts')
 export class PostController {
@@ -19,6 +19,23 @@ export class PostController {
   @HttpCode(201)
   create(@Body() createPostDto: CreatePostRequestDto) {
     return this.postService.create(createPostDto);
+  }
+
+  @Patch('/:postId')
+  @HttpCode(200)
+  modify(
+    @Param('postId') postId: string,
+    @Body() modifyPostDto: CreatePostRequestDto,
+  ) {
+    const parsedPostId = parseInt(postId);
+    return this.postService.modify(parsedPostId, modifyPostDto);
+  }
+
+  @Delete('/:postId')
+  @HttpCode(204)
+  delete(@Param('postId') postId: string) {
+    const parsedPostId = parseInt(postId);
+    return this.postService.delete(parsedPostId);
   }
 
   @Get()
@@ -39,15 +56,5 @@ export class PostController {
   getPostById(@Param('postId') postId: string) {
     const parsedPostId = parseInt(postId);
     return this.postService.getPostById(parsedPostId);
-  }
-
-  @Patch('/:postId')
-  @HttpCode(200)
-  modify(
-    @Param('postId') postId: string,
-    @Body() modifyPostDto: CreatePostRequestDto,
-  ) {
-    const parsedPostId = parseInt(postId);
-    return this.postService.modify(parsedPostId, modifyPostDto);
   }
 }

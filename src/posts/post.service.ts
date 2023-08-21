@@ -15,6 +15,7 @@ import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
 import { GetPostByCategoryResponseDto } from './dto/getPostByCategory.response.dto';
 import { GetPostByIdResponseDto } from './dto/getPostById.response.dto';
 import { ModifyPostResponseDto } from './dto/modifyPost.response.dto';
+import { Comment } from '../comments/Comment.entity';
 
 @Injectable()
 export class PostService {
@@ -25,6 +26,8 @@ export class PostService {
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(PostToCategory)
     private readonly postToCategoryRepository: Repository<PostToCategory>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
   ) {}
 
   @Transactional()
@@ -66,6 +69,30 @@ export class PostService {
     const savedPost = await this.postRepository.save(getPost);
 
     return new ModifyPostResponseDto(savedPost);
+  }
+
+  @Transactional()
+  async delete(postId: number) {
+    await this.commentRepository
+      .createQueryBuilder('comments')
+      .delete()
+      .from(Comment)
+      .where('post_id = :postId', { postId: postId })
+      .execute();
+
+    await this.postToCategoryRepository
+      .createQueryBuilder('post_category')
+      .delete()
+      .from(PostToCategory)
+      .where('post_id = :postId', { postId: postId })
+      .execute();
+
+    await this.postRepository
+      .createQueryBuilder('posts')
+      .delete()
+      .from(Post)
+      .where('id = :id', { id: postId })
+      .execute();
   }
 
   async getAllPosts() {
