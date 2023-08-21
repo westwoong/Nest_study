@@ -1,15 +1,13 @@
-import { Column, Entity, ManyToOne, RelationId } from 'typeorm';
-import { DefaultEntity } from '../config/default.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { DefaultEntityColumn } from '../config/default.entity';
 import { Post } from '../posts/Post.entity';
 
 @Entity('comments')
-export class Comment extends DefaultEntity {
-  @Column()
+export class Comment extends DefaultEntityColumn {
+  @Column({ nullable: false })
   content: string;
 
-  @ManyToOne(() => Post, (post) => post.comments)
+  @ManyToOne(() => Post, (post) => post.comments, { nullable: false })
+  @JoinColumn()
   post: Post;
-
-  @RelationId((comment: Comment) => comment.post)
-  postId: number;
 }

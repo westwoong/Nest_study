@@ -1,13 +1,13 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { DefaultEntity } from '../config/default.entity';
+import { DefaultEntityColumn } from '../config/default.entity';
 import { Comment } from '../comments/Comment.entity';
 
 @Entity('posts')
-export class Post extends DefaultEntity {
-  @Column()
+export class Post extends DefaultEntityColumn {
+  @Column({ nullable: false })
   title: string;
 
-  @Column()
+  @Column({ nullable: false })
   content: string;
 
   @OneToMany(() => Comment, (comment) => comment.post)
