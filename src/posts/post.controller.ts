@@ -21,6 +21,7 @@ export class PostController {
   @Get('/category/:categoryId')
   @HttpCode(200)
   getPostByCategory(@Param('categoryId') categoryId: string) {
-    return this.postService.getPostsByCategory(categoryId);
+    const parsedCategoryId = parseInt(categoryId);
+    return this.postService.getPostsByCategory(parsedCategoryId);
   }
 }

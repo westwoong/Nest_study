@@ -8,6 +8,7 @@ import { Transactional } from 'typeorm-transactional';
 import { PostToCategory } from './category/PostToCategory.entity';
 import { CreatePostResponseDto } from './dto/createPost.response.dto';
 import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
+import { GetPostByCategoryResponseDto } from './dto/getPostByCategory.response.dto';
 
 @Injectable()
 export class PostService {
@@ -53,7 +54,29 @@ export class PostService {
     return getAllPosts.map((post) => new GetAllPostResponseDto(post));
   }
 
-  getPostsByCategory(categoryId: string) {
-    return categoryId;
+  async getPostsByCategory(categoryId: number) {
+    const test = await this.categoryRepository.find({
+      where: { id: categoryId },
+      relations: {
+        postToCategories: {
+          post: true,
+        },
+      },
+    });
+
+    const postList = test[0].postToCategories.map((list) => list.post);
+
+    postList.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    const response = {
+      category: test[0].name,
+      postList: postList,
+    };
+
+    // console.log(response);
+    return new GetPostByCategoryResponseDto(response);
   }
 }
