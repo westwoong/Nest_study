@@ -1,7 +1,12 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { DefaultEntityColumn } from '../../config/default.entity';
+import { PostToCategory } from './PostToCategory.entity';
 
 @Entity('category')
-export class PostCategoryEntity {
+export class Category extends DefaultEntityColumn {
   @Column()
-  postType: string;
+  name: string;
+
+  @OneToMany(() => PostToCategory, (postToCategory) => postToCategory.category)
+  postToCategories: PostToCategory[];
 }
