@@ -28,4 +28,16 @@ export class CategoryService {
     const savedCategory = await this.categoryRepository.save(category);
     return new CreateCategoryResponseDto(savedCategory);
   }
+
+  async getCategories() {
+    const getCategoriesData = await this.categoryRepository.find();
+    console.log(getCategoriesData);
+
+    return getCategoriesData.map((category) => {
+      return {
+        id: category.id,
+        name: category.name,
+      };
+    });
+  }
 }
