@@ -133,7 +133,7 @@ export class PostService {
   }
 
   async getPostById(postId: number) {
-    const getPosts = await this.postRepository.find({
+    const posts: Post[] = await this.postRepository.find({
       where: { id: postId },
       relations: {
         comments: true,
@@ -143,21 +143,6 @@ export class PostService {
       },
     });
 
-    const commentsData = getPosts[0].comments.map((comment) => ({
-      id: comment.id,
-      content: comment.content,
-      createdAt: comment.createdAt,
-    }));
-
-    const responseData = {
-      category: getPosts[0].postToCategories[0].category.name,
-      postId: getPosts[0].id,
-      title: getPosts[0].title,
-      content: getPosts[0].content,
-      createdAt: getPosts[0].createdAt,
-      comments: commentsData,
-    };
-
-    return new GetPostByIdResponseDto(responseData);
+    return new GetPostByIdResponseDto(posts);
   }
 }
