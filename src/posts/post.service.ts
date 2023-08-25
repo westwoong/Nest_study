@@ -44,12 +44,12 @@ export class PostService {
 
     if (!category) {
       throw new BadRequestException('해당 카테고리는 없습니다');
-    } else {
-      const savedData = new PostToCategory();
-      savedData.post = savedPost;
-      savedData.category = category;
-      await this.postToCategoryRepository.save(savedData);
     }
+    const savedData = new PostToCategory();
+    savedData.post = savedPost;
+    savedData.category = category;
+
+    await this.postToCategoryRepository.save(savedData);
 
     return new CreatePostResponseDto(savedPost);
   }
@@ -73,26 +73,34 @@ export class PostService {
 
   @Transactional()
   async delete(postId: number) {
-    await this.commentRepository
-      .createQueryBuilder('comments')
-      .delete()
-      .from(Comment)
-      .where('post_id = :postId', { postId: postId })
-      .execute();
+    const post = await this.postRepository.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) {
+      throw new Error();
+    }
 
-    await this.postToCategoryRepository
-      .createQueryBuilder('post_category')
-      .delete()
-      .from(PostToCategory)
-      .where('post_id = :postId', { postId: postId })
-      .execute();
+    const comments = await this.commentRepository.find({
+      where: {
+        post: post,
+      },
+    });
 
-    await this.postRepository
-      .createQueryBuilder('posts')
-      .delete()
-      .from(Post)
-      .where('id = :id', { id: postId })
-      .execute();
+    const postToCategory = await this.postToCategoryRepository.find({
+      where: {
+        post: post,
+      },
+    });
+
+    console.log(post);
+    console.log(comments);
+    console.log(postToCategory);
+
+    await this.commentRepository.remove(comments);
+    await this.postToCategoryRepository.remove(postToCategory);
+    await this.postRepository.remove(post);
   }
 
   async getAllPosts() {
