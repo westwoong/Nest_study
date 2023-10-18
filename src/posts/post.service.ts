@@ -1,0 +1,156 @@
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { CreatePostRequestDto } from './dto/createPost.request.dto';
+import { Repository } from 'typeorm';
+import { Post } from './Post.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from './category/Category.entity';
+import { Transactional } from 'typeorm-transactional';
+import { PostToCategory } from './category/PostToCategory.entity';
+import { CreatePostResponseDto } from './dto/createPost.response.dto';
+import { GetAllPostResponseDto } from './dto/getAllPost.response.dto';
+import { GetPostByCategoryResponseDto } from './dto/getPostByCategory.response.dto';
+import { GetPostByIdResponseDto } from './dto/getPostById.response.dto';
+import { ModifyPostResponseDto } from './dto/modifyPost.response.dto';
+import { Comment } from '../comments/Comment.entity';
+
+@Injectable()
+export class PostService {
+  constructor(
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(PostToCategory)
+    private readonly postToCategoryRepository: Repository<PostToCategory>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
+  ) {}
+
+  @Transactional()
+  async create(postData: CreatePostRequestDto) {
+    const post = new Post(postData);
+
+    const savedPost = await this.postRepository.save(post);
+
+    const category: Category | null = await this.categoryRepository.findOne({
+      where: {
+        name: postData.category,
+      },
+    });
+
+    if (!category) {
+      throw new BadRequestException('해당 카테고리는 없습니다');
+    }
+    const savedData = new PostToCategory();
+    savedData.post = savedPost;
+    savedData.category = category;
+
+    await this.postToCategoryRepository.save(savedData);
+
+    return new CreatePostResponseDto(savedPost);
+  }
+
+  @Transactional()
+  async modify(postId: number, postData: CreatePostRequestDto) {
+    const getPost = await this.postRepository.findOne({
+      where: { id: postId },
+    });
+    if (!getPost) {
+      throw new NotFoundException('해당 게시물 없음');
+    }
+
+    getPost.title = postData.title;
+    getPost.content = postData.content;
+
+    const savedPost = await this.postRepository.save(getPost);
+
+    return new ModifyPostResponseDto(savedPost);
+  }
+
+  @Transactional()
+  async delete(postId: number) {
+    const post = await this.postRepository.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) {
+      throw new Error();
+    }
+
+    const comments = await this.commentRepository.find({
+      where: {
+        post: post,
+      },
+    });
+
+    const postToCategory = await this.postToCategoryRepository.find({
+      where: {
+        post: post,
+      },
+    });
+
+    console.log(post);
+    console.log(comments);
+    console.log(postToCategory);
+
+    await this.commentRepository.remove(comments);
+    await this.postToCategoryRepository.remove(postToCategory);
+    await this.postRepository.remove(post);
+  }
+
+  async getAllPosts() {
+    const getAllPosts = await this.postRepository.find({
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+    return getAllPosts.map((post) => new GetAllPostResponseDto(post));
+  }
+
+  async getPostsByCategory(categoryId: number) {
+    const postByCategory = await this.categoryRepository.find({
+      where: { id: categoryId },
+      relations: {
+        postToCategories: {
+          post: true,
+        },
+      },
+    });
+
+    const postList = postByCategory[0].postToCategories.map(
+      (list) => list.post,
+    );
+
+    postList.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    const response = {
+      category: postByCategory[0].name,
+      postList: postList,
+    };
+
+    // console.log(response);
+    return new GetPostByCategoryResponseDto(response);
+  }
+
+  async getPostById(postId: number) {
+    const posts: Post[] = await this.postRepository.find({
+      where: { id: postId },
+      relations: {
+        comments: true,
+        postToCategories: {
+          category: true,
+        },
+      },
+    });
+
+    return new GetPostByIdResponseDto(posts);
+  }
+}
